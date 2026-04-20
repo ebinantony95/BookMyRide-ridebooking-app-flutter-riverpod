@@ -24,7 +24,9 @@ class DriverRideScreen extends ConsumerStatefulWidget {
 class _DriverRideScreenState extends ConsumerState<DriverRideScreen> {
   final MapController _mapController = MapController();
   bool _isCompleting = false;
+  bool _isMapReady = false;
   String? _lastFitSignature;
+  RideEntity? _pendingFitRide;
 
   @override
   void dispose() {
@@ -43,7 +45,32 @@ class _DriverRideScreenState extends ConsumerState<DriverRideScreen> {
     ].join(':');
   }
 
+  void _handleMapReady() {
+    if (_isMapReady || !mounted) {
+      return;
+    }
+
+    _isMapReady = true;
+
+    final pendingRide = _pendingFitRide;
+    _pendingFitRide = null;
+    if (pendingRide != null) {
+      _fitRide(pendingRide);
+      return;
+    }
+
+    final ride = ref.read(driverRideByIdProvider(widget.rideId)).valueOrNull;
+    if (ride != null) {
+      _fitRide(ride);
+    }
+  }
+
   void _fitRide(RideEntity ride) {
+    if (!_isMapReady) {
+      _pendingFitRide = ride;
+      return;
+    }
+
     final routePoints = ride.routePoints
         .map((point) => LatLng(point.latitude, point.longitude))
         .toList(growable: false);
@@ -175,6 +202,7 @@ class _DriverRideScreenState extends ConsumerState<DriverRideScreen> {
                 options: MapOptions(
                   initialCenter: pickupPoint,
                   initialZoom: 14,
+                  onMapReady: _handleMapReady,
                 ),
                 children: [
                   TileLayer(

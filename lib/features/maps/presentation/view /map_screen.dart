@@ -31,7 +31,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   final MapController mapController = MapController();
   Timer? _debounce;
   bool _isSearching = false;
+  bool _isMapReady = false;
   String? _lastRouteSignature;
+  List<LocationPoint>? _pendingFitPoints;
 
   @override
   void initState() {
@@ -86,8 +88,33 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     return '${points.length}:${first.latitude}:${first.longitude}:${last.latitude}:${last.longitude}';
   }
 
+  void _handleMapReady() {
+    if (_isMapReady || !mounted) {
+      return;
+    }
+
+    _isMapReady = true;
+
+    final pendingPoints = _pendingFitPoints;
+    _pendingFitPoints = null;
+    if (pendingPoints != null) {
+      _fitPolyline(pendingPoints);
+      return;
+    }
+
+    final route = ref.read(polylineRouteViewModelProvider).route;
+    if (route != null) {
+      _fitPolyline(route.points);
+    }
+  }
+
   void _fitPolyline(List<LocationPoint> points) {
     if (points.length < 2 || !mounted) {
+      return;
+    }
+
+    if (!_isMapReady) {
+      _pendingFitPoints = List<LocationPoint>.from(points);
       return;
     }
 
@@ -168,6 +195,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             options: MapOptions(
               initialCenter: LatLng(current.latitude, current.longitude),
               initialZoom: 15,
+              onMapReady: _handleMapReady,
               onTap: (_, __) {
                 if (_isSearching) {
                   _closeSearch();
