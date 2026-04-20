@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:make_my_ride/features/maps/presentation/providers/map_providers.dart';
 import 'package:make_my_ride/features/pending_rides/domain/ride_status.dart';
 import 'package:make_my_ride/features/pending_rides/presentation/providers/pending_ride_provider.dart';
+import 'package:make_my_ride/features/polylines_routes/presentation/providers/polyline_route_providers.dart';
 
 class PendingRideBootstrap extends ConsumerWidget {
   const PendingRideBootstrap({
@@ -20,6 +21,8 @@ class PendingRideBootstrap extends ConsumerWidget {
       activeRideProvider,
       (previous, next) {
         next.whenData((ride) {
+          ref.read(polylineRouteViewModelProvider.notifier).syncWithRide(ride);
+
           if (!RideStatusValues.isActive(ride?.status)) {
             return;
           }

@@ -41,10 +41,18 @@ class LocationPoint extends Equatable {
 
   factory LocationPoint.fromJson(Map<String, dynamic> json) {
     return LocationPoint(
-      latitude: json['latitude'] as double,
-      longitude: json['longitude'] as double,
+      latitude: _asDouble(json['latitude']),
+      longitude: _asDouble(json['longitude']),
       address: json['address'] as String?,
       name: json['name'] as String?,
     );
+  }
+
+  static double _asDouble(Object? value) {
+    if (value is num) {
+      return value.toDouble();
+    }
+
+    return 0;
   }
 }

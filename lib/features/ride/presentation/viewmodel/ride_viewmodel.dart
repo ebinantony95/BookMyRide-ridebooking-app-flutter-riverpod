@@ -6,6 +6,7 @@ import 'package:make_my_ride/features/ride/domain/entities/ride_entitiy.dart';
 import 'package:make_my_ride/features/ride/domain/entities/vehcle_entity.dart';
 import 'package:make_my_ride/features/ride/domain/usecases/create_ride.dart';
 import 'package:make_my_ride/features/ride/domain/usecases/get_user_ride.dart';
+import 'package:make_my_ride/shared/models/location_model.dart';
 
 import '../../domain/repositories/ride_repository.dart';
 import 'ride_state.dart';
@@ -60,6 +61,9 @@ class RideViewModel extends StateNotifier<RideState> {
     required double pickupLng,
     required double dropLat,
     required double dropLng,
+    required List<LocationPoint> routePoints,
+    required double distanceKm,
+    required double durationMin,
   }) async {
     try {
       // Check for active ride before creating a new one
@@ -83,6 +87,9 @@ class RideViewModel extends StateNotifier<RideState> {
         dropLat: dropLat,
         dropLng: dropLng,
         vehicle: state.selectedVehicle!,
+        routePoints: routePoints,
+        distanceKm: distanceKm,
+        durationMin: durationMin,
       );
 
       await repository.createRide(ride);

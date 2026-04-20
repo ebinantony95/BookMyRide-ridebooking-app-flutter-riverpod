@@ -8,7 +8,7 @@ void main() {
     await tester.pumpWidget(
       const ProviderScope(child: BookMyRideApp()),
     );
-    expect(find.byType(MaterialApp), findsNothing); // uses MaterialApp.router
+    expect(find.byType(MaterialApp), findsOneWidget);
     expect(find.byType(Router<Object>), findsOneWidget);
   });
 }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:make_my_ride/features/pending_rides/presentation/providers/pending_ride_provider.dart';
 import 'package:make_my_ride/features/maps/presentation/view /widgets/book_your_ride_button.dart';
 import 'package:make_my_ride/features/maps/presentation/view /widgets/ride_summary_widget.dart';
+import 'package:make_my_ride/features/polylines_routes/presentation/providers/polyline_route_providers.dart';
+import 'package:make_my_ride/shared/models/location_model.dart';
 import '../../providers/map_providers.dart';
 
 class SearchBottomSheet extends ConsumerWidget {
@@ -110,6 +113,12 @@ class SearchBottomSheet extends ConsumerWidget {
                                     ref
                                         .read(mapViewModelProvider.notifier)
                                         .clearSelection();
+                                    ref
+                                        .read(
+                                          polylineRouteViewModelProvider
+                                              .notifier,
+                                        )
+                                        .clearPreviewRoute();
                                   },
                                 )
                               : null,
@@ -167,7 +176,30 @@ class SearchBottomSheet extends ConsumerWidget {
           title: Text(place.name,
               style: const TextStyle(fontWeight: FontWeight.w500)),
           onTap: () {
+            if (ref.read(hasBlockingRideProvider)) {
+              ref.read(mapViewModelProvider.notifier).setSummaryMode(true);
+              onCloseSearch();
+              return;
+            }
+
             ref.read(mapViewModelProvider.notifier).selectPlace(place);
+            final pickup = ref.read(mapViewModelProvider).currentLocation;
+
+            if (pickup != null) {
+              ref
+                  .read(polylineRouteViewModelProvider.notifier)
+                  .fetchPreviewRoute(
+                    pickup: LocationPoint(
+                      latitude: pickup.latitude,
+                      longitude: pickup.longitude,
+                    ),
+                    drop: LocationPoint(
+                      latitude: place.lat,
+                      longitude: place.lon,
+                      name: place.name,
+                    ),
+                  );
+            }
 
             mapController.move(
               LatLng(place.lat, place.lon),

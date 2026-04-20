@@ -18,8 +18,29 @@ class RideRepositoryImpl implements RideRepository {
   }
 
   @override
+  Future<List<RideEntity>> getDriverRides(String driverId) {
+    return remote.getDriverRides(driverId);
+  }
+
+  @override
+  Future<List<RideEntity>> getPendingRides() {
+    return remote.getPendingRides();
+  }
+
+  @override
   Future<void> updateRideStatus(String rideId, String status) {
     return remote.updateRideStatus(rideId, status);
+  }
+
+  @override
+  Future<void> acceptRide({
+    required String rideId,
+    required String driverId,
+  }) {
+    return remote.acceptRide(
+      rideId: rideId,
+      driverId: driverId,
+    );
   }
 
   @override
@@ -33,7 +54,22 @@ class RideRepositoryImpl implements RideRepository {
   }
 
   @override
+  Future<RideEntity?> getDriverActiveRide(String driverId) {
+    return remote.getDriverActiveRide(driverId);
+  }
+
+  @override
   Stream<RideEntity?> watchActiveRide(String userId) {
     return remote.watchActiveRide(userId);
+  }
+
+  @override
+  Stream<RideEntity?> watchDriverActiveRide(String driverId) {
+    return remote.watchDriverActiveRide(driverId);
+  }
+
+  @override
+  Stream<RideEntity?> watchRide(String rideId) {
+    return remote.watchRide(rideId);
   }
 }

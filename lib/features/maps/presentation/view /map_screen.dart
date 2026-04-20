@@ -9,7 +9,10 @@ import 'package:make_my_ride/core/router/app_routes.dart';
 import 'package:make_my_ride/core/theme/theme.dart';
 import 'package:make_my_ride/features/auth/presentation/providers/auth_provider.dart';
 import 'package:make_my_ride/features/auth/presentation/viewmodel/auth_viewmodel.dart';
+import 'package:make_my_ride/features/pending_rides/presentation/providers/pending_ride_provider.dart';
+import 'package:make_my_ride/features/polylines_routes/presentation/providers/polyline_route_providers.dart';
 import 'package:make_my_ride/features/ride/presentation/providers/user_id_provider.dart';
+import 'package:make_my_ride/shared/models/location_model.dart';
 
 import '../providers/map_providers.dart';
 import 'widgets/search_bottom_sheet.dart';
@@ -28,6 +31,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   final MapController mapController = MapController();
   Timer? _debounce;
   bool _isSearching = false;
+  String? _lastRouteSignature;
 
   @override
   void initState() {
@@ -72,10 +76,66 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     });
   }
 
+  String? _routeSignature(List<LocationPoint> points) {
+    if (points.length < 2) {
+      return null;
+    }
+
+    final first = points.first;
+    final last = points.last;
+    return '${points.length}:${first.latitude}:${first.longitude}:${last.latitude}:${last.longitude}';
+  }
+
+  void _fitPolyline(List<LocationPoint> points) {
+    if (points.length < 2 || !mounted) {
+      return;
+    }
+
+    final coordinates = points
+        .map((point) => LatLng(point.latitude, point.longitude))
+        .toList(growable: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      mapController.fitCamera(
+        CameraFit.coordinates(
+          coordinates: coordinates,
+          padding: const EdgeInsets.fromLTRB(48, 88, 48, 280),
+          maxZoom: 15.5,
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(mapViewModelProvider);
     final authState = ref.watch(authViewModelProvider);
+    final activeRide = ref.watch(activeRideProvider).valueOrNull;
+    final polylineRouteState = ref.watch(polylineRouteViewModelProvider);
+
+    ref.listen(polylineRouteViewModelProvider, (previous, next) {
+      if (!next.hasRoute) {
+        _lastRouteSignature = null;
+        return;
+      }
+
+      final route = next.route;
+      if (route == null) {
+        return;
+      }
+
+      final signature = _routeSignature(route.points);
+      if (signature == null || signature == _lastRouteSignature) {
+        return;
+      }
+
+      _lastRouteSignature = signature;
+      _fitPolyline(route.points);
+    });
 
     if (state.currentLocation == null) {
       return const Scaffold(
@@ -84,6 +144,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
 
     final current = state.currentLocation!;
+    final routePoints = polylineRouteState.route?.points
+            .map((point) => LatLng(point.latitude, point.longitude))
+            .toList(growable: false) ??
+        const <LatLng>[];
+    final destinationPoint = activeRide != null
+        ? LatLng(activeRide.dropLat, activeRide.dropLng)
+        : state.selectedPlace != null
+            ? LatLng(state.selectedPlace!.lat, state.selectedPlace!.lon)
+            : null;
+    final pickupPoint = activeRide != null
+        ? LatLng(activeRide.pickupLat, activeRide.pickupLng)
+        : null;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -109,6 +181,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 subdomains: ['a', 'b', 'c'],
                 userAgentPackageName: 'com.example.make_my_ride',
               ),
+              if (routePoints.length >= 2)
+                PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points: routePoints,
+                      strokeWidth: 5,
+                      color: AppColors.primary,
+                      borderStrokeWidth: 2,
+                      borderColor: Colors.white.withValues(alpha: 0.85),
+                    ),
+                  ],
+                ),
               CurrentLocationLayer(
                 alignPositionOnUpdate: AlignOnUpdate.never,
                 alignDirectionOnUpdate: AlignOnUpdate.never,
@@ -124,10 +208,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               ),
               MarkerLayer(
                 markers: [
-                  if (state.selectedPlace != null)
+                  if (pickupPoint != null)
                     Marker(
-                      point: LatLng(
-                          state.selectedPlace!.lat, state.selectedPlace!.lon),
+                      point: pickupPoint,
+                      child: const Icon(
+                        Icons.radio_button_checked,
+                        color: Colors.black87,
+                        size: 20,
+                      ),
+                    ),
+                  if (destinationPoint != null)
+                    Marker(
+                      point: destinationPoint,
                       child: const Icon(Icons.location_pin,
                           color: Colors.black87, size: 40),
                     ),

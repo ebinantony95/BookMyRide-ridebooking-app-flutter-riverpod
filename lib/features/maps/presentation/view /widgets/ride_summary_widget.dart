@@ -5,7 +5,7 @@ import 'package:make_my_ride/features/maps/presentation/providers/map_providers.
 import 'package:make_my_ride/features/maps/presentation/view%20/widgets/detail_row.dart';
 import 'package:make_my_ride/features/pending_rides/domain/ride_status.dart';
 import 'package:make_my_ride/features/pending_rides/presentation/providers/pending_ride_provider.dart';
-import 'package:make_my_ride/features/ride/domain/usecases/calculate_distance.dart';
+import 'package:make_my_ride/features/polylines_routes/presentation/providers/polyline_route_providers.dart';
 import 'package:make_my_ride/features/ride/domain/usecases/calculate_price.dart';
 import 'package:make_my_ride/features/ride/presentation/providers/ride_provider.dart';
 import 'package:make_my_ride/features/ride/presentation/providers/user_id_provider.dart';
@@ -61,7 +61,9 @@ class RideSummaryWidget extends ConsumerWidget {
     final rideState = ref.watch(rideViewModelProvider);
     final activeRideAsync = ref.watch(activeRideProvider);
     final mapState = ref.watch(mapViewModelProvider);
+    final polylineRouteState = ref.watch(polylineRouteViewModelProvider);
     final userId = ref.watch(userIdProvider);
+
     final isCheckingActiveRide =
         activeRideAsync.isLoading && activeRideAsync.valueOrNull == null;
     final hasActiveRideSyncError = activeRideAsync.hasError;
@@ -79,21 +81,23 @@ class RideSummaryWidget extends ConsumerWidget {
     final selectedVehicle = rideState.selectedVehicle;
     final canCreateRide =
         !hasActiveRide && !isCheckingActiveRide && !hasActiveRideSyncError;
-    final isDeletingRide = rideState.isDeletingRide;
+
+    final routeState = polylineRouteState;
+    final route = routeState.route;
+    final isRouteLoading = !hasActiveRide && routeState.isLoading;
+    final routeError = !hasActiveRide ? routeState.error : null;
+    final hasValidRoute =
+        !hasActiveRide && route != null && route.points.isNotEmpty;
 
     double? estimatedPrice;
-    if (!hasActiveRide &&
-        pickup != null &&
-        drop != null &&
-        selectedVehicle != null) {
-      final distance = CalculateDistance()(
-        pickup.latitude,
-        pickup.longitude,
-        drop.lat,
-        drop.lon,
-      );
-      estimatedPrice = CalculatePrice()(distance, selectedVehicle);
+    double? estimatedDuration;
+    if (selectedVehicle != null && hasValidRoute) {
+      estimatedPrice = CalculatePrice()(route.distanceKm, selectedVehicle);
+      estimatedDuration = route.durationMin;
     }
+
+    final isDeletingRide = rideState.isDeletingRide;
+    final rideDuration = currentRide?.durationMin ?? 0;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
@@ -212,6 +216,13 @@ class RideSummaryWidget extends ConsumerWidget {
                             value:
                                 '${currentRide.distanceKm.toStringAsFixed(1)} km',
                           ),
+                          if (rideDuration > 0) ...[
+                            const SizedBox(height: 10),
+                            DetailRow(
+                              label: 'Estimated Time',
+                              value: '${rideDuration.toStringAsFixed(0)} mins',
+                            ),
+                          ],
                           const SizedBox(height: 10),
                           DetailRow(
                             label: 'Status',
@@ -221,21 +232,6 @@ class RideSummaryWidget extends ConsumerWidget {
                                 : AppColors.warning,
                           ),
                           const SizedBox(height: 20),
-                          // Container(
-                          //   width: double.infinity,
-                          //   padding: const EdgeInsets.all(14),
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.white.withValues(alpha: 0.7),
-                          //     borderRadius: BorderRadius.circular(14),
-                          //   ),
-                          //   child: Text(
-                          //     'Firestore is the source of truth for this ride. Booking stays locked until this ride becomes COMPLETED.',
-                          //     style: TextStyle(
-                          //       color: Colors.grey.shade800,
-                          //       fontWeight: FontWeight.w600,
-                          //     ),
-                          //   ),
-                          // ),
                           const SizedBox(height: 16),
                           SizedBox(
                             width: double.infinity,
@@ -308,6 +304,39 @@ class RideSummaryWidget extends ConsumerWidget {
                           ],
                         ),
                       ),
+                    if (hasValidRoute) ...[
+                      DetailRow(
+                        label: 'Road Distance',
+                        value: '${route.distanceKm.toStringAsFixed(1)} km',
+                      ),
+                      if (estimatedDuration != null) ...[
+                        const SizedBox(height: 10),
+                        DetailRow(
+                          label: 'Estimated Time',
+                          value: '${estimatedDuration.toStringAsFixed(0)} mins',
+                        ),
+                      ],
+                      const SizedBox(height: 16),
+                    ],
+                    if (isRouteLoading)
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 16.0),
+                        child: Text(
+                          'Drawing the road route from your current location...',
+                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                        ),
+                      ),
+                    if (routeError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Text(
+                          routeError,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     if (isCheckingActiveRide)
                       const Padding(
                         padding: EdgeInsets.only(bottom: 16.0),
@@ -328,9 +357,11 @@ class RideSummaryWidget extends ConsumerWidget {
                     SizedBox(
                       height: 52,
                       child: ElevatedButton(
-                        onPressed: canCreateRide
+                        onPressed: canCreateRide &&
+                                hasValidRoute &&
+                                !isRouteLoading
                             ? () {
-                                if (rideState.selectedVehicle == null) {
+                                if (selectedVehicle == null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -341,17 +372,27 @@ class RideSummaryWidget extends ConsumerWidget {
                                   return;
                                 }
 
-                                if (pickup != null && drop != null) {
-                                  ref
-                                      .read(rideViewModelProvider.notifier)
-                                      .createRide(
-                                        userId: userId,
-                                        pickupLat: pickup.latitude,
-                                        pickupLng: pickup.longitude,
-                                        dropLat: drop.lat,
-                                        dropLng: drop.lon,
-                                      );
+                                if (pickup == null || drop == null) {
+                                  return;
                                 }
+
+                                final routeToBook = route;
+                                if (routeToBook.points.isEmpty) {
+                                  return;
+                                }
+
+                                ref
+                                    .read(rideViewModelProvider.notifier)
+                                    .createRide(
+                                      userId: userId,
+                                      pickupLat: pickup.latitude,
+                                      pickupLng: pickup.longitude,
+                                      dropLat: drop.lat,
+                                      dropLng: drop.lon,
+                                      routePoints: routeToBook.points,
+                                      distanceKm: routeToBook.distanceKm,
+                                      durationMin: routeToBook.durationMin,
+                                    );
                               }
                             : null,
                         child: Text(
@@ -359,7 +400,11 @@ class RideSummaryWidget extends ConsumerWidget {
                               ? 'Ride In Progress'
                               : isCheckingActiveRide
                                   ? 'Checking Active Ride...'
-                                  : 'Book Ride',
+                                  : isRouteLoading
+                                      ? 'Drawing Route...'
+                                      : !hasValidRoute
+                                          ? 'Route Required'
+                                          : 'Book Ride',
                         ),
                       ),
                     ),
