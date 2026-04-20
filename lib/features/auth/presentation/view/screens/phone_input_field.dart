@@ -37,7 +37,7 @@ class PhoneInputField extends StatelessWidget {
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
                       right: BorderSide(color: AppColors.border),
                     ),
@@ -48,8 +48,11 @@ class PhoneInputField extends StatelessWidget {
                       const SizedBox(width: 6),
                       Text(countryCode, style: AppTextStyles.bodyMedium),
                       const SizedBox(width: 4),
-                      const Icon(Icons.expand_more_rounded,
-                          size: 18, color: AppColors.textSecondary),
+                      Icon(
+                        Icons.expand_more_rounded,
+                        size: 18,
+                        color: AppColors.textSecondary,
+                      ),
                     ],
                   ),
                 ),

@@ -31,12 +31,14 @@ class AppCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: borderRadius ?? BorderRadius.circular(radius ?? AppRadius.md),
+        borderRadius:
+            borderRadius ?? BorderRadius.circular(radius ?? AppRadius.md),
         child: Ink(
           padding: padding ?? const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: color ?? AppColors.background,
-            borderRadius: borderRadius ?? BorderRadius.circular(radius ?? AppRadius.md),
+            color: color ?? AppColors.cardBackground,
+            borderRadius:
+                borderRadius ?? BorderRadius.circular(radius ?? AppRadius.md),
             border: Border.all(color: AppColors.border, width: 0.5),
             boxShadow: boxShadow ?? AppShadows.card,
           ),
@@ -118,9 +120,15 @@ class RideCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(from, style: AppTextStyles.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(from,
+                    style: AppTextStyles.bodyMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 8),
-                Text(to, style: AppTextStyles.bodyMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(to,
+                    style: AppTextStyles.bodyMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -139,7 +147,8 @@ class RideCard extends StatelessWidget {
                 ),
                 child: Text(
                   status,
-                  style: AppTextStyles.captionBold.copyWith(color: _statusColor),
+                  style:
+                      AppTextStyles.captionBold.copyWith(color: _statusColor),
                 ),
               ),
               const SizedBox(height: 4),
@@ -191,7 +200,11 @@ class DriverCard extends StatelessWidget {
             ),
             child: photoUrl != null
                 ? ClipOval(child: Image.network(photoUrl!, fit: BoxFit.cover))
-                : const Icon(Icons.person_rounded, color: AppColors.primary, size: 28),
+                : const Icon(
+                    Icons.person_rounded,
+                    color: AppColors.primary,
+                    size: 28,
+                  ),
           ),
           const SizedBox(width: 12),
           // ─── Info
@@ -206,18 +219,25 @@ class DriverCard extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: AppColors.cardBackground,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: AppColors.border, width: 0.5),
                       ),
-                      child: Text(plateNumber, style: AppTextStyles.captionBold),
+                      child:
+                          Text(plateNumber, style: AppTextStyles.captionBold),
                     ),
                     const SizedBox(width: 8),
-                    const Icon(Icons.star_rounded, color: AppColors.warning, size: 14),
+                    const Icon(
+                      Icons.star_rounded,
+                      color: AppColors.warning,
+                      size: 14,
+                    ),
                     const SizedBox(width: 2),
-                    Text(rating.toStringAsFixed(1), style: AppTextStyles.captionBold),
+                    Text(rating.toStringAsFixed(1),
+                        style: AppTextStyles.captionBold),
                   ],
                 ),
               ],
@@ -228,14 +248,16 @@ class DriverCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   color: AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(AppRadius.full),
                 ),
                 child: Text(
                   'ETA $eta',
-                  style: AppTextStyles.captionBold.copyWith(color: AppColors.primaryDark),
+                  style: AppTextStyles.captionBold
+                      .copyWith(color: AppColors.primaryDark),
                 ),
               ),
               const SizedBox(height: 8),
@@ -273,7 +295,7 @@ class _ActionButton extends StatelessWidget {
       child: Container(
         width: 36,
         height: 36,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.primary,
           shape: BoxShape.circle,
         ),
@@ -307,7 +329,7 @@ class SkeletonLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
       baseColor: AppColors.cardBackground,
-      highlightColor: AppColors.background,
+      highlightColor: AppColors.surfaceVariant,
       child: Container(
         width: width,
         height: height,

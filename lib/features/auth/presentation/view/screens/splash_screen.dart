@@ -60,11 +60,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
       if (!mounted) return;
 
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness:
+            AppColors.isDarkMode ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor: AppColors.background,
+        systemNavigationBarIconBrightness:
+            AppColors.isDarkMode ? Brightness.light : Brightness.dark,
       ));
 
       // GoRouter handles the navigation automatically once isInitialized is true

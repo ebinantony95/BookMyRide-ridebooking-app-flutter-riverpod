@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:make_my_ride/core/theme/theme.dart';
 import 'package:make_my_ride/features/ride/domain/entities/vehcle_entity.dart';
 import 'package:make_my_ride/features/ride/presentation/providers/ride_provider.dart';
 
@@ -64,6 +65,8 @@ class _VehicleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: () {
         ref.read(rideViewModelProvider.notifier).selectVehicle(type);
@@ -72,25 +75,26 @@ class _VehicleCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.black : Colors.grey[100],
+          color: isSelected ? colorScheme.onSurface : AppColors.cardBackground,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? Colors.black : Colors.transparent,
+            color: isSelected ? colorScheme.onSurface : AppColors.border,
             width: 2,
           ),
+          boxShadow: isSelected ? AppShadows.card : null,
         ),
         child: Column(
           children: [
             Icon(
               icon,
-              color: isSelected ? Colors.white : Colors.black87,
+              color: isSelected ? colorScheme.surface : AppColors.textPrimary,
               size: 28,
             ),
             const SizedBox(height: 8),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black87,
+                color: isSelected ? colorScheme.surface : AppColors.textPrimary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 fontSize: 14,
               ),

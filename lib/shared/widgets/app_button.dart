@@ -83,7 +83,8 @@ class AppButton extends StatefulWidget {
   State<AppButton> createState() => _AppButtonState();
 }
 
-class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMixin {
+class _AppButtonState extends State<AppButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -110,7 +111,7 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
   _ButtonStyle _resolveStyle() {
     switch (widget.variant) {
       case AppButtonVariant.primary:
-        return const _ButtonStyle(
+        return _ButtonStyle(
           background: AppColors.primary,
           foreground: AppColors.textOnPrimary,
           pressedBackground: AppColors.primaryDark,
@@ -118,34 +119,42 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
           border: null,
         );
       case AppButtonVariant.secondary:
-        return const _ButtonStyle(
+        return _ButtonStyle(
           background: AppColors.primaryLight,
-          foreground: AppColors.primaryDark,
-          pressedBackground: Color(0xFFCEF5D6),
+          foreground:
+              AppColors.isDarkMode ? AppColors.primary : AppColors.primaryDark,
+          pressedBackground: AppColors.primaryLight.withValues(
+            alpha: AppColors.isDarkMode ? 0.82 : 1,
+          ),
           shadows: null,
           border: null,
         );
       case AppButtonVariant.outline:
-        return const _ButtonStyle(
+        return _ButtonStyle(
           background: Colors.transparent,
           foreground: AppColors.primary,
-          pressedBackground: AppColors.primaryLight,
-          shadows: null,
+          pressedBackground: AppColors.primaryLight.withValues(
+            alpha: AppColors.isDarkMode ? 0.65 : 1,
+          ),
+          shadows: AppColors.isDarkMode ? AppShadows.card : null,
           border: BorderSide(color: AppColors.primary, width: 1.5),
         );
       case AppButtonVariant.ghost:
-        return const _ButtonStyle(
+        return _ButtonStyle(
           background: Colors.transparent,
           foreground: AppColors.primary,
-          pressedBackground: AppColors.primaryLight,
+          pressedBackground: AppColors.primaryLight.withValues(
+            alpha: AppColors.isDarkMode ? 0.65 : 1,
+          ),
           shadows: null,
           border: null,
         );
       case AppButtonVariant.danger:
-        return const _ButtonStyle(
+        return _ButtonStyle(
           background: AppColors.error,
           foreground: Colors.white,
-          pressedBackground: Color(0xFFD9363E),
+          pressedBackground: AppColors.error
+              .withValues(alpha: AppColors.isDarkMode ? 0.84 : 1),
           shadows: null,
           border: null,
         );
@@ -170,7 +179,8 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
       case AppButtonSize.medium:
         return AppTextStyles.button.copyWith(color: _style.foreground);
       case AppButtonSize.large:
-        return AppTextStyles.button.copyWith(color: _style.foreground, fontSize: 17);
+        return AppTextStyles.button
+            .copyWith(color: _style.foreground, fontSize: 17);
     }
   }
 
@@ -211,8 +221,12 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
                     : _style.background.withValues(alpha: 0.5))
                 : _style.background,
             borderRadius: AppRadius.buttonRadius,
-            border: _style.border != null ? Border.fromBorderSide(_style.border!) : null,
-            boxShadow: (!_isDisabled && _style.shadows != null) ? _style.shadows : null,
+            border: _style.border != null
+                ? Border.fromBorderSide(_style.border!)
+                : null,
+            boxShadow: (!_isDisabled && _style.shadows != null)
+                ? _style.shadows
+                : null,
           ),
           child: Center(
             child: widget.isLoading
@@ -229,7 +243,8 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
                     children: [
                       if (widget.prefixIcon != null) ...[
                         IconTheme(
-                          data: IconThemeData(color: _style.foreground, size: _iconSize),
+                          data: IconThemeData(
+                              color: _style.foreground, size: _iconSize),
                           child: widget.prefixIcon!,
                         ),
                         const SizedBox(width: 8),
@@ -238,7 +253,8 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
                       if (widget.suffixIcon != null) ...[
                         const SizedBox(width: 8),
                         IconTheme(
-                          data: IconThemeData(color: _style.foreground, size: _iconSize),
+                          data: IconThemeData(
+                              color: _style.foreground, size: _iconSize),
                           child: widget.suffixIcon!,
                         ),
                       ],
@@ -258,7 +274,7 @@ class _ButtonStyle {
   final List<BoxShadow>? shadows;
   final BorderSide? border;
 
-  const _ButtonStyle({
+  _ButtonStyle({
     required this.background,
     required this.foreground,
     required this.pressedBackground,

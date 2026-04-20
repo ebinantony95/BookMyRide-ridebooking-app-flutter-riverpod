@@ -138,6 +138,7 @@ class _DriverRideScreenState extends ConsumerState<DriverRideScreen> {
   @override
   Widget build(BuildContext context) {
     final rideAsync = ref.watch(driverRideByIdProvider(widget.rideId));
+    final colorScheme = Theme.of(context).colorScheme;
 
     ref.listen(driverRideByIdProvider(widget.rideId), (previous, next) {
       next.whenData((ride) {
@@ -219,7 +220,8 @@ class _DriverRideScreenState extends ConsumerState<DriverRideScreen> {
                           strokeWidth: 5,
                           color: AppColors.primary,
                           borderStrokeWidth: 2,
-                          borderColor: Colors.white.withValues(alpha: 0.85),
+                          borderColor:
+                              colorScheme.surface.withValues(alpha: 0.88),
                         ),
                       ],
                     ),
@@ -227,17 +229,17 @@ class _DriverRideScreenState extends ConsumerState<DriverRideScreen> {
                     markers: [
                       Marker(
                         point: pickupPoint,
-                        child: const Icon(
+                        child: Icon(
                           Icons.radio_button_checked,
-                          color: Colors.black87,
+                          color: AppColors.textPrimary,
                           size: 20,
                         ),
                       ),
                       Marker(
                         point: destinationPoint,
-                        child: const Icon(
+                        child: Icon(
                           Icons.location_pin,
-                          color: Colors.black87,
+                          color: AppColors.textPrimary,
                           size: 40,
                         ),
                       ),
@@ -252,13 +254,13 @@ class _DriverRideScreenState extends ConsumerState<DriverRideScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.cardBackground,
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 18,
-                        offset: const Offset(0, 10),
+                        color: AppColors.shadowMedium,
+                        blurRadius: 20,
+                        offset: const Offset(0, 12),
                       ),
                     ],
                   ),
@@ -350,8 +352,8 @@ class _TripDetailRow extends StatelessWidget {
           width: 96,
           child: Text(
             label,
-            style: const TextStyle(
-              color: Colors.black54,
+            style: TextStyle(
+              color: AppColors.textSecondary,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -363,7 +365,7 @@ class _TripDetailRow extends StatelessWidget {
             textAlign: TextAlign.right,
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              color: valueColor ?? Colors.black87,
+              color: valueColor ?? AppColors.textPrimary,
             ),
           ),
         ),

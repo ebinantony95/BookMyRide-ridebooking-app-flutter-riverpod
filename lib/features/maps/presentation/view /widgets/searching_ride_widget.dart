@@ -29,6 +29,8 @@ class _SearchingRideWidgetState extends State<SearchingRideWidget>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       // Use a constraint instead of a fixed height for better flexibility
@@ -65,8 +67,8 @@ class _SearchingRideWidgetState extends State<SearchingRideWidget>
                     Container(
                       width: 60,
                       height: 60,
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
+                      decoration: BoxDecoration(
+                        color: colorScheme.onSurface,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -79,31 +81,31 @@ class _SearchingRideWidgetState extends State<SearchingRideWidget>
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 "Searching for nearest ride...",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 "Connecting you with top-rated drivers",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 "A new ride can only be created after this ride is completed.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: AppColors.textSecondary,
                   fontWeight: FontWeight.w500,
                 ),
               ),

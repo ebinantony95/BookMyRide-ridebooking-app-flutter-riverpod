@@ -137,12 +137,21 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     });
   }
 
+  String _themeModeLabel(ThemeMode themeMode) {
+    return switch (themeMode) {
+      ThemeMode.light => 'Light',
+      ThemeMode.dark => 'Dark',
+      ThemeMode.system => 'System',
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(mapViewModelProvider);
     final authState = ref.watch(authViewModelProvider);
     final activeRide = ref.watch(activeRideProvider).valueOrNull;
     final polylineRouteState = ref.watch(polylineRouteViewModelProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     ref.listen(polylineRouteViewModelProvider, (previous, next) {
       if (!next.hasRoute) {
@@ -217,7 +226,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       strokeWidth: 5,
                       color: AppColors.primary,
                       borderStrokeWidth: 2,
-                      borderColor: Colors.white.withValues(alpha: 0.85),
+                      borderColor: colorScheme.surface.withValues(alpha: 0.88),
                     ),
                   ],
                 ),
@@ -239,17 +248,20 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   if (pickupPoint != null)
                     Marker(
                       point: pickupPoint,
-                      child: const Icon(
+                      child: Icon(
                         Icons.radio_button_checked,
-                        color: Colors.black87,
+                        color: AppColors.textPrimary,
                         size: 20,
                       ),
                     ),
                   if (destinationPoint != null)
                     Marker(
                       point: destinationPoint,
-                      child: const Icon(Icons.location_pin,
-                          color: Colors.black87, size: 40),
+                      child: Icon(
+                        Icons.location_pin,
+                        color: AppColors.textPrimary,
+                        size: 40,
+                      ),
                     ),
                 ],
               ),
@@ -307,6 +319,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final title =
         userName != null && userName.isNotEmpty ? userName : 'My Account';
     final subtitle = user?.phoneNumber ?? 'Signed-in user';
+    final themeMode = ref.watch(appThemeModeProvider);
 
     return Drawer(
       child: SafeArea(
@@ -362,6 +375,37 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               },
             ),
             ListTile(
+              leading: Icon(
+                themeMode == ThemeMode.dark
+                    ? Icons.dark_mode_rounded
+                    : themeMode == ThemeMode.light
+                        ? Icons.light_mode_rounded
+                        : Icons.brightness_auto_rounded,
+              ),
+              title: const Text('Appearance'),
+              subtitle: Text(_themeModeLabel(themeMode)),
+              trailing: PopupMenuButton<ThemeMode>(
+                initialValue: themeMode,
+                onSelected: (mode) {
+                  ref.read(appThemeModeProvider.notifier).setThemeMode(mode);
+                },
+                itemBuilder: (context) => const [
+                  PopupMenuItem(
+                    value: ThemeMode.system,
+                    child: Text('System'),
+                  ),
+                  PopupMenuItem(
+                    value: ThemeMode.light,
+                    child: Text('Light'),
+                  ),
+                  PopupMenuItem(
+                    value: ThemeMode.dark,
+                    child: Text('Dark'),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
               leading: const Icon(Icons.logout_rounded, color: AppColors.error),
               title: const Text('Sign Out'),
               subtitle: const Text('Exit this account'),
@@ -376,23 +420,30 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     );
   }
 
-  Widget _buildFloatingIcon(IconData icon, {Color iconColor = Colors.black87}) {
+  Widget _buildFloatingIcon(
+    IconData icon, {
+    Color? iconColor,
+  }) {
     return Container(
       width: 50,
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBackground,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.shadowMedium,
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           )
         ],
       ),
       child: Center(
-        child: Icon(icon, color: iconColor, size: 24),
+        child: Icon(
+          icon,
+          color: iconColor ?? AppColors.textPrimary,
+          size: 24,
+        ),
       ),
     );
   }

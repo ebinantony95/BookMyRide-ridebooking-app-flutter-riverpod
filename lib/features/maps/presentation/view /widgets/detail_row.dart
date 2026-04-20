@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:make_my_ride/core/theme/app_colors.dart';
 
 class DetailRow extends StatelessWidget {
   const DetailRow({
@@ -23,7 +24,7 @@ class DetailRow extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey.shade700,
+            color: AppColors.textSecondary,
           ),
         ),
         Text(
@@ -31,7 +32,7 @@ class DetailRow extends StatelessWidget {
           style: TextStyle(
             fontSize: emphasize ? 22 : 15,
             fontWeight: emphasize ? FontWeight.bold : FontWeight.w600,
-            color: valueColor ?? Colors.black87,
+            color: valueColor ?? AppColors.textPrimary,
           ),
         ),
       ],

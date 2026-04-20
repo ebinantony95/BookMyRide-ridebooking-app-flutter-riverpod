@@ -98,6 +98,7 @@ class RideSummaryWidget extends ConsumerWidget {
 
     final isDeletingRide = rideState.isDeletingRide;
     final rideDuration = currentRide?.durationMin ?? 0;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
@@ -122,11 +123,12 @@ class RideSummaryWidget extends ConsumerWidget {
                               .setSummaryMode(false);
                         },
                       ),
-                      const Text(
+                      Text(
                         'Ride Summary',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -190,7 +192,7 @@ class RideSummaryWidget extends ConsumerWidget {
                                           ? 'A driver has accepted your ride. Your next ride unlocks after this trip is completed.'
                                           : 'Waiting for a driver to accept your ride. Your next ride unlocks after this trip is completed.',
                                       style: TextStyle(
-                                        color: Colors.grey.shade700,
+                                        color: AppColors.textSecondary,
                                         fontSize: 13,
                                       ),
                                     ),
@@ -272,7 +274,7 @@ class RideSummaryWidget extends ConsumerWidget {
                             Text(
                               rideState.error!,
                               style: const TextStyle(
-                                color: Colors.red,
+                                color: AppColors.error,
                                 fontSize: 14,
                               ),
                             ),
@@ -289,10 +291,12 @@ class RideSummaryWidget extends ConsumerWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               'Estimated Price',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.textSecondary,
+                              ),
                             ),
                             Text(
                               '₹${estimatedPrice.toStringAsFixed(0)}',
@@ -319,11 +323,14 @@ class RideSummaryWidget extends ConsumerWidget {
                       const SizedBox(height: 16),
                     ],
                     if (isRouteLoading)
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(bottom: 16.0),
                         child: Text(
                           'Drawing the road route from your current location...',
-                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     if (routeError != null)
@@ -332,17 +339,20 @@ class RideSummaryWidget extends ConsumerWidget {
                         child: Text(
                           routeError,
                           style: const TextStyle(
-                            color: Colors.red,
+                            color: AppColors.error,
                             fontSize: 14,
                           ),
                         ),
                       ),
                     if (isCheckingActiveRide)
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(bottom: 16.0),
                         child: Text(
                           'Checking whether you already have an active ride...',
-                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     if (rideState.error != null)
@@ -350,8 +360,10 @@ class RideSummaryWidget extends ConsumerWidget {
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
                           rideState.error!,
-                          style:
-                              const TextStyle(color: Colors.red, fontSize: 14),
+                          style: const TextStyle(
+                            color: AppColors.error,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     SizedBox(
@@ -363,10 +375,12 @@ class RideSummaryWidget extends ConsumerWidget {
                             ? () {
                                 if (selectedVehicle == null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                    SnackBar(
                                       content: Text(
                                         'Please select a vehicle type.',
                                       ),
+                                      backgroundColor:
+                                          colorScheme.inverseSurface,
                                     ),
                                   );
                                   return;

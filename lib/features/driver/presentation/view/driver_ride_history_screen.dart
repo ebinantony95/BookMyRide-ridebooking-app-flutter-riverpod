@@ -49,7 +49,7 @@ class DriverRideHistoryScreen extends ConsumerWidget {
                 Text(
                   error.toString().replaceFirst('Exception: ', ''),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.black54),
+                  style: TextStyle(color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -139,8 +139,8 @@ class _DriverEarningsCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             '$completedTrips completed trips out of $totalTrips accepted rides.',
-            style: const TextStyle(
-              color: Colors.black54,
+            style: TextStyle(
+              color: AppColors.textSecondary,
               height: 1.4,
             ),
           ),
@@ -180,13 +180,13 @@ class _DriverRideHistoryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            color: AppColors.shadowLight,
+            blurRadius: 18,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -215,7 +215,7 @@ class _DriverRideHistoryCard extends StatelessWidget {
               const Spacer(),
               Text(
                 createdAtLabel,
-                style: const TextStyle(color: Colors.black54),
+                style: TextStyle(color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -247,8 +247,8 @@ class _DriverRideHistoryCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             'Ride ID: ${ride.id}',
-            style: const TextStyle(
-              color: Colors.black45,
+            style: TextStyle(
+              color: AppColors.textHint,
               fontSize: 12,
             ),
           ),
@@ -274,8 +274,8 @@ class _HistoryValue extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.black54,
+          style: TextStyle(
+            color: AppColors.textSecondary,
             fontSize: 13,
           ),
         ),
@@ -300,11 +300,11 @@ class _EmptyDriverHistory extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.border),
       ),
-      child: const Column(
+      child: Column(
         children: [
           Icon(
             Icons.history_rounded,
@@ -325,7 +325,7 @@ class _EmptyDriverHistory extends StatelessWidget {
             'Accepted and completed rides will show up here with your earnings.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.black54,
+              color: AppColors.textSecondary,
               height: 1.4,
             ),
           ),

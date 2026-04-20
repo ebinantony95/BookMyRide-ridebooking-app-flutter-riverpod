@@ -21,6 +21,9 @@ class RoleOptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final surfaceColor = theme.colorScheme.surface;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -30,8 +33,10 @@ class RoleOptionCard extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color:
-                isSelected ? accentColor.withValues(alpha: 0.08) : Colors.white,
+            color: isSelected
+                ? accentColor.withValues(
+                    alpha: theme.brightness == Brightness.dark ? 0.16 : 0.08)
+                : surfaceColor,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: isSelected ? accentColor : AppColors.border,
@@ -39,9 +44,9 @@ class RoleOptionCard extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
+                color: AppColors.shadowLight,
+                blurRadius: theme.brightness == Brightness.dark ? 24 : 18,
+                offset: const Offset(0, 10),
               ),
             ],
           ),

@@ -30,7 +30,8 @@ class RideHistoryScreen extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.error_outline, size: 40, color: AppColors.error),
+                const Icon(Icons.error_outline,
+                    size: 40, color: AppColors.error),
                 const SizedBox(height: 12),
                 const Text(
                   'Could not load your rides right now.',
@@ -44,7 +45,7 @@ class RideHistoryScreen extends ConsumerWidget {
                 Text(
                   error.toString().replaceFirst('Exception: ', ''),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.black54),
+                  style: TextStyle(color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -95,7 +96,7 @@ class _RideHistoryCard extends StatelessWidget {
       case RideStatusValues.pending:
         return AppColors.warning;
       default:
-        return Colors.black54;
+        return AppColors.textSecondary;
     }
   }
 
@@ -109,13 +110,13 @@ class _RideHistoryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            color: AppColors.shadowLight,
+            blurRadius: 18,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -144,7 +145,7 @@ class _RideHistoryCard extends StatelessWidget {
               const Spacer(),
               Text(
                 createdAtLabel,
-                style: const TextStyle(color: Colors.black54),
+                style: TextStyle(color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -177,8 +178,8 @@ class _RideHistoryCard extends StatelessWidget {
           // Keep the ride id visible for debugging and support follow-up.
           Text(
             'Ride ID: ${ride.id}',
-            style: const TextStyle(
-              color: Colors.black45,
+            style: TextStyle(
+              color: AppColors.textHint,
               fontSize: 12,
             ),
           ),
@@ -204,8 +205,8 @@ class _HistoryValue extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.black54,
+          style: TextStyle(
+            color: AppColors.textSecondary,
             fontSize: 13,
           ),
         ),

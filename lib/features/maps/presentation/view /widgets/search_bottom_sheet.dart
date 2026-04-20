@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:make_my_ride/core/theme/app_colors.dart';
 import 'package:make_my_ride/features/pending_rides/presentation/providers/pending_ride_provider.dart';
 import 'package:make_my_ride/features/maps/presentation/view /widgets/book_your_ride_button.dart';
 import 'package:make_my_ride/features/maps/presentation/view /widgets/ride_summary_widget.dart';
@@ -30,6 +31,8 @@ class SearchBottomSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mapViewModelProvider);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 300),
@@ -46,15 +49,15 @@ class SearchBottomSheet extends ConsumerWidget {
         padding:
             EdgeInsets.only(top: isSearching ? 60 : 20, left: 24, right: 24),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: isSearching
               ? BorderRadius.zero
               : const BorderRadius.vertical(top: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
+              color: AppColors.shadowMedium,
+              blurRadius: theme.brightness == Brightness.dark ? 26 : 20,
+              offset: const Offset(0, -6),
             )
           ],
         ),
@@ -67,11 +70,15 @@ class SearchBottomSheet extends ConsumerWidget {
               )
             else ...[
               if (!isSearching)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(bottom: 20),
                   child: Text(
                     "Where to?",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                 ),
 
@@ -89,7 +96,7 @@ class SearchBottomSheet extends ConsumerWidget {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: AppColors.cardBackground,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: TextField(
@@ -98,15 +105,21 @@ class SearchBottomSheet extends ConsumerWidget {
                         onChanged: onSearchChanged,
                         decoration: InputDecoration(
                           hintText: "Search destination...",
-                          hintStyle:
-                              const TextStyle(color: Colors.grey, fontSize: 15),
+                          hintStyle: TextStyle(
+                            color: AppColors.textHint,
+                            fontSize: 15,
+                          ),
                           border: InputBorder.none,
-                          prefixIcon:
-                              const Icon(Icons.search, color: Colors.grey),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: AppColors.textSecondary,
+                          ),
                           suffixIcon: searchController.text.isNotEmpty
                               ? IconButton(
-                                  icon: const Icon(Icons.clear,
-                                      color: Colors.grey),
+                                  icon: Icon(
+                                    Icons.clear,
+                                    color: AppColors.textSecondary,
+                                  ),
                                   onPressed: () {
                                     searchController.clear();
                                     onSearchChanged("");
@@ -157,22 +170,25 @@ class SearchBottomSheet extends ConsumerWidget {
       return const SizedBox();
     }
     if (state.searchResults.isEmpty) {
-      return const Center(
-          child:
-              Text("No results found", style: TextStyle(color: Colors.grey)));
+      return Center(
+        child: Text(
+          "No results found",
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+      );
     }
 
     return ListView.separated(
       padding: EdgeInsets.zero,
       itemCount: state.searchResults.length,
       separatorBuilder: (context, index) =>
-          const Divider(height: 1, color: Colors.black12),
+          Divider(height: 1, color: AppColors.divider),
       itemBuilder: (context, index) {
         final place = state.searchResults[index];
         return ListTile(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          leading: const Icon(Icons.place, color: Colors.grey),
+          leading: Icon(Icons.place, color: AppColors.textSecondary),
           title: Text(place.name,
               style: const TextStyle(fontWeight: FontWeight.w500)),
           onTap: () {

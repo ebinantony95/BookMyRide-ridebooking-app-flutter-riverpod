@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:make_my_ride/core/router/app_routes.dart';
-import 'package:make_my_ride/core/theme/app_colors.dart';
+import 'package:make_my_ride/core/theme/theme.dart';
 import 'package:make_my_ride/features/auth/presentation/providers/auth_provider.dart';
 import 'package:make_my_ride/features/driver/presentation/providers/driver_ride_providers.dart';
 import 'package:make_my_ride/features/ride/domain/entities/ride_entitiy.dart';
@@ -18,6 +18,14 @@ class DriverHome extends ConsumerStatefulWidget {
 
 class _DriverHomeState extends ConsumerState<DriverHome> {
   String? _acceptingRideId;
+
+  String _themeModeLabel(ThemeMode themeMode) {
+    return switch (themeMode) {
+      ThemeMode.light => 'Light',
+      ThemeMode.dark => 'Dark',
+      ThemeMode.system => 'System',
+    };
+  }
 
   Future<void> _refreshPendingRides() async {
     ref.invalidate(driverPendingRidesProvider);
@@ -90,6 +98,7 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
     final activeRideAsync = ref.watch(driverActiveRideProvider);
     final activeRide = activeRideAsync.valueOrNull;
     final driverName = authState.user?.name?.trim();
+    final themeMode = ref.watch(appThemeModeProvider);
 
     return Scaffold(
       drawer: Drawer(
@@ -144,6 +153,37 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
                   Navigator.of(context).pop();
                   context.push(AppRoutes.driverRideHistory);
                 },
+              ),
+              ListTile(
+                leading: Icon(
+                  themeMode == ThemeMode.dark
+                      ? Icons.dark_mode_rounded
+                      : themeMode == ThemeMode.light
+                          ? Icons.light_mode_rounded
+                          : Icons.brightness_auto_rounded,
+                ),
+                title: const Text('Appearance'),
+                subtitle: Text(_themeModeLabel(themeMode)),
+                trailing: PopupMenuButton<ThemeMode>(
+                  initialValue: themeMode,
+                  onSelected: (mode) {
+                    ref.read(appThemeModeProvider.notifier).setThemeMode(mode);
+                  },
+                  itemBuilder: (context) => const [
+                    PopupMenuItem(
+                      value: ThemeMode.system,
+                      child: Text('System'),
+                    ),
+                    PopupMenuItem(
+                      value: ThemeMode.light,
+                      child: Text('Light'),
+                    ),
+                    PopupMenuItem(
+                      value: ThemeMode.dark,
+                      child: Text('Dark'),
+                    ),
+                  ],
+                ),
               ),
               ListTile(
                 leading:
@@ -202,7 +242,7 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
                 child: Text(
                   error.toString().replaceFirst('Exception: ', ''),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.black54),
+                  style: TextStyle(color: AppColors.textSecondary),
                 ),
               ),
             ],
@@ -232,8 +272,8 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
                   activeRide != null
                       ? 'You already have an active trip. Pending rides stay visible, but you must complete the active trip first.'
                       : 'Pull down to refresh and accept a pending ride.',
-                  style: const TextStyle(
-                    color: Colors.black54,
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -294,8 +334,8 @@ class _ActiveTripCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'Ride ${ride.id.substring(0, 8).toUpperCase()} is accepted and ready to complete.',
-            style: const TextStyle(
-              color: Colors.black87,
+            style: TextStyle(
+              color: AppColors.textPrimary,
               height: 1.4,
             ),
           ),
@@ -358,14 +398,14 @@ class _PendingRideCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 8),
+            color: AppColors.shadowLight,
+            blurRadius: 14,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -394,15 +434,15 @@ class _PendingRideCard extends StatelessWidget {
               const Spacer(),
               Text(
                 createdAtLabel,
-                style: const TextStyle(color: Colors.black54),
+                style: TextStyle(color: AppColors.textSecondary),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Pickup',
             style: TextStyle(
-              color: Colors.black54,
+              color: AppColors.textSecondary,
               fontSize: 13,
             ),
           ),
@@ -415,10 +455,10 @@ class _PendingRideCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Destination',
             style: TextStyle(
-              color: Colors.black54,
+              color: AppColors.textSecondary,
               fontSize: 13,
             ),
           ),
@@ -521,11 +561,11 @@ class _EmptyPendingRides extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.border),
       ),
-      child: const Column(
+      child: Column(
         children: [
           Icon(
             Icons.inbox_outlined,
@@ -546,7 +586,7 @@ class _EmptyPendingRides extends StatelessWidget {
             'Pull to refresh and check again when a rider creates a new trip.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.black54,
+              color: AppColors.textSecondary,
               height: 1.4,
             ),
           ),

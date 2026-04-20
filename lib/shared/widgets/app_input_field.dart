@@ -71,7 +71,8 @@ class _AppInputFieldState extends State<AppInputField> {
         if (widget.label != null) ...[
           Text(
             widget.label!,
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+            style:
+                AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
           ),
           const SizedBox(height: 6),
         ],
@@ -101,7 +102,7 @@ class _AppInputFieldState extends State<AppInputField> {
                 ? Padding(
                     padding: const EdgeInsets.only(left: 14, right: 10),
                     child: IconTheme(
-                      data: const IconThemeData(
+                      data: IconThemeData(
                         color: AppColors.textSecondary,
                         size: 20,
                       ),
@@ -109,12 +110,15 @@ class _AppInputFieldState extends State<AppInputField> {
                     ),
                   )
                 : null,
-            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+            prefixIconConstraints:
+                const BoxConstraints(minWidth: 0, minHeight: 0),
             suffixIcon: widget.obscureText
                 ? GestureDetector(
                     onTap: () => setState(() => _obscure = !_obscure),
                     child: Icon(
-                      _obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      _obscure
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       color: AppColors.textSecondary,
                       size: 20,
                     ),

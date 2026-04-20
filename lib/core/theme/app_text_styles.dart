@@ -6,7 +6,7 @@ abstract final class AppTextStyles {
   static TextStyle _base({
     required double fontSize,
     required FontWeight fontWeight,
-    Color color = AppColors.textPrimary,
+    Color? color,
     double? height,
     double? letterSpacing,
   }) =>
