@@ -1,7 +1,9 @@
 # 🚖 BookMyRide – Full Stack Ride Booking App
 
 BookMyRide is a **Flutter + Firebase powered ride-booking application** that connects users and drivers in real-time.  
-It follows a **Feature-first Clean Architecture** approach and uses **Redux for state management**, ensuring scalability and maintainability.
+The app supports **OTP-based authentication**, **role-based access (User/Driver)**, and a complete **ride lifecycle system** with map-based navigation.
+
+It is built using a **Feature-first Clean Architecture** and uses **Riverpod for state management**, ensuring scalability, maintainability, and clean separation of concerns.
 
 ---
 
@@ -10,11 +12,12 @@ It follows a **Feature-first Clean Architecture** approach and uses **Redux for 
 - 🔐 OTP-based authentication (Phone login)
 - 👥 Role-based system (User / Driver)
 - 🗺️ OpenStreetMap integration for maps & routing
-- 🚕 Real-time ride lifecycle (Pending → Accepted → Completed)
-- 📊 Driver earnings dashboard
+- 🚕 Real-time ride lifecycle:
+  - Pending → Accepted → Completed
+- 📊 Driver earnings & ride history tracking
 - 🌙 Light & Dark theme support
 - 🧱 Feature-first Clean Architecture
-- 🔁 Redux state management
+- 🔁 Riverpod state management
 
 ---
 
@@ -66,9 +69,9 @@ It follows a **Feature-first Clean Architecture** approach and uses **Redux for 
 
 ## 🏗️ Architecture
 
-This project follows a **Feature-first Clean Architecture**, where each feature is modular and self-contained.
+This project follows a **feature-first clean architecture**, where each feature is modular and self-contained.
 
-## 📦 Project Structure (Feature-First Clean Architecture)
+### 📦 Project Structure
 
 ```bash
 lib/
@@ -86,9 +89,9 @@ lib/
 │   │
 │   ├── home/                     # Home & navigation
 │   ├── maps/                     # Map rendering & location handling
-│   ├── pending_rides/            # Ride requests management
-│   ├── polylines_routes/         # Route drawing & navigation
-│   ├── ride/                     # Ride lifecycle logic
+│   ├── pending_rides/            # Ride request handling
+│   ├── polylines_routes/         # Route drawing logic
+│   ├── ride/                     # Ride lifecycle management
 │   ├── shared/                   # Shared feature-level components
 │
 ├── main.dart
