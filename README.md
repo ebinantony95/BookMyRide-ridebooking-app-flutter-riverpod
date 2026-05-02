@@ -176,7 +176,7 @@ Used for:
 ## ⚙️ Getting Started
 
 ### 1. Clone the repository
-git clone https://github.com/your-username/bookmyride.git  
+git clone https://github.com/ebinantony95/BookMyRide-ridebooking-app-flutter-riverpod.git
 cd bookmyride  
 
 ### 2. Install dependencies
