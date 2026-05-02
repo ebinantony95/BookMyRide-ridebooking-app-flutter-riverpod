@@ -68,14 +68,30 @@ It follows a **Feature-first Clean Architecture** approach and uses **Redux for 
 
 This project follows a **Feature-first Clean Architecture**, where each feature is modular and self-contained.
 
-### 📦 Structure
+## 📦 Project Structure (Feature-First Clean Architecture)
+
+```bash
 lib/
-├── core/ # Shared utilities, constants, services
+├── core/                         # Shared utilities, services, constants
 ├── features/
-│ ├── auth/ # Authentication (OTP login)
-│ ├── user/ # User ride booking flow
-│ ├── driver/ # Driver ride handling
-│ ├── ride/ # Ride lifecycle management
+│   ├── auth/                     # Authentication (OTP login)
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
+│   │
+│   ├── driver/                   # Driver-side features
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
+│   │
+│   ├── home/                     # Home & navigation
+│   ├── maps/                     # Map rendering & location handling
+│   ├── pending_rides/            # Ride requests management
+│   ├── polylines_routes/         # Route drawing & navigation
+│   ├── ride/                     # Ride lifecycle logic
+│   ├── shared/                   # Shared feature-level components
+│
+├── main.dart
 
 
 ### 🧱 Layers
@@ -86,17 +102,16 @@ lib/
 
 ---
 
-## 🔁 State Management (Redux)
+## 🔁 State Management (Riverpod)
 
-- Centralized global state using **Redux**
-- Predictable state updates using:
-  - Actions
-  - Reducers
-  - Store
-- Efficient handling of:
-  - Authentication state
-  - Ride status updates
-  - User & driver data
+- Uses **Riverpod** for scalable and reactive state management
+- Ensures clear separation between UI and business logic
+- Provides dependency injection and testability
+
+Handles:
+- Authentication state
+- Ride lifecycle updates
+- User & driver data
 
 ---
 
