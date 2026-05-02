@@ -169,7 +169,7 @@ Used for:
 | Riverpod         | State Management     |
 | OpenStreetMap    | Maps                 |
 | OpenRouteService | Routing              |
-| Photon API       | Place Search         |
+| Nominatim API    | Place Search         |
 
 ---
 
