@@ -1,27 +1,67 @@
-# 🚖 BookMyRide – Full Stack Ride Booking App
+<div align="center">
 
-BookMyRide is a **Flutter + Firebase powered ride-booking application** that connects users and drivers in real-time.  
-The app supports **OTP-based authentication**, **role-based access (User/Driver)**, and a complete **ride lifecycle system** with map-based navigation.
+# 🚖 BookMyRide
 
-It is built using a **Feature-first Clean Architecture** and uses **Riverpod for state management**, ensuring scalability, maintainability, and clean separation of concerns.
+### 🗺️ Ride • Connect • Travel Smart
 
----
-
-## ✨ Key Highlights
-
-- 🔐 OTP-based authentication (Phone login)
-- 👥 Role-based system (User / Driver)
-- 🗺️ OpenStreetMap integration for maps & routing
-- 🚕 Real-time ride lifecycle:
-  - Pending → Accepted → Completed
-- 📊 Driver earnings & ride history tracking
-- 🌙 Light & Dark theme support
-- 🧱 Feature-first Clean Architecture
-- 🔁 Riverpod state management
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=00C853&center=true&vCenter=true&width=500&lines=Ride+Booking+App;Flutter+%2B+Firebase;Clean+Architecture;Real-time+Ride+Flow" />
 
 ---
 
-## 📱 App Screens
+![Flutter](https://img.shields.io/badge/Flutter-Framework-blue?logo=flutter)
+![Firebase](https://img.shields.io/badge/Firebase-Backend-orange?logo=firebase)
+![Riverpod](https://img.shields.io/badge/State-Riverpod-green)
+![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-purple)
+
+</div>
+
+---
+
+## ✨ About the App
+
+**BookMyRide** is a full-stack ride booking application that connects **users and drivers in real-time**.
+
+It provides a complete ride experience from **booking → acceptance → completion**, powered by maps, location tracking, and real-time updates.
+
+Built with a strong focus on:
+- 🧱 Scalable architecture  
+- ⚡ Performance  
+- 🎯 Real-world usability  
+
+---
+
+## 🚀 Features
+
+### 🔐 Authentication
+- Phone number login with OTP
+- Secure Firebase authentication
+
+### 👤 User Features
+- Live location detection
+- Search destination
+- Ride fare estimation
+- Book rides by vehicle type
+- View ride history
+
+### 🚗 Driver Features
+- Accept ride requests
+- Update ride status
+- Track completed rides
+- View total earnings
+
+### 🗺️ Maps & Navigation
+- OpenStreetMap integration
+- Route drawing with polylines
+- Distance & time estimation
+
+### 🎨 UI/UX
+- Clean modern interface
+- Dark & Light mode support
+- Smooth animations
+
+---
+
+## 📱 Screenshots
 
 ### 🔐 Authentication
 <p align="center">
@@ -32,7 +72,7 @@ It is built using a **Feature-first Clean Architecture** and uses **Riverpod for
 
 ---
 
-### 👤 Onboarding & Role Selection
+### 👤 Onboarding
 <p align="center">
   <img src="assets/screens/profileComplete.png" width="230"/>
   <img src="assets/screens/roleselection.png" width="230"/>
@@ -60,91 +100,28 @@ It is built using a **Feature-first Clean Architecture** and uses **Riverpod for
 
 ---
 
-### ⚙️ Drawer & Settings
-<p align="center">
-  <img src="assets/screens/drawar.png" width="230"/>
-</p>
-
----
-
-## 🏗️ Architecture
-
-This project follows a **feature-first clean architecture**, where each feature is modular and self-contained.
-
-### 📦 Project Structure
+## 🧠 Architecture
 
 ```bash
+Feature-First Clean Architecture + Riverpod
 lib/
-├── core/                         # Shared utilities, services, constants
+├── core/
 ├── features/
-│   ├── auth/                     # Authentication (OTP login)
+│   ├── auth/
 │   │   ├── data/
 │   │   ├── domain/
 │   │   └── presentation/
 │   │
-│   ├── driver/                   # Driver-side features
+│   ├── driver/
 │   │   ├── data/
 │   │   ├── domain/
 │   │   └── presentation/
 │   │
-│   ├── home/                     # Home & navigation
-│   ├── maps/                     # Map rendering & location handling
-│   ├── pending_rides/            # Ride request handling
-│   ├── polylines_routes/         # Route drawing logic
-│   ├── ride/                     # Ride lifecycle management
-│   ├── shared/                   # Shared feature-level components
+│   ├── home/
+│   ├── maps/
+│   ├── pending_rides/
+│   ├── polylines_routes/
+│   ├── ride/
+│   ├── shared/
 │
-├── main.dart
-
-
-### 🧱 Layers
-
-- **Presentation Layer** → UI & Widgets  
-- **Domain Layer** → Business logic & entities  
-- **Data Layer** → Firebase integration & APIs  
-
----
-
-## 🔁 State Management (Riverpod)
-
-- Uses **Riverpod** for scalable and reactive state management
-- Ensures clear separation between UI and business logic
-- Provides dependency injection and testability
-
-Handles:
-- Authentication state
-- Ride lifecycle updates
-- User & driver data
-
----
-
-## 🔄 Ride Lifecycle
-
-- 🟡 **Pending** – Created by user  
-- 🔵 **Accepted** – Accepted by driver  
-- 🟢 **Completed** – Ride finished  
-
----
-
-## 🛠️ Tech Stack
-
-- **Frontend:** Flutter  
-- **Backend:** Firebase (Authentication + Firestore)  
-- **State Management:** Redux  
-- **Architecture:** Feature-first Clean Architecture  
-
-### 🌍 Maps & Location
-- OpenStreetMap  
-- OpenRouteService  
-- Photon API (Place Search)  
-- Geolocator  
-
----
-
-## ⚙️ Installation
-
-```bash
-git clone https://github.com/your-username/bookmyride.git
-cd bookmyride
-flutter pub get
-flutter run
+└── main.dart
